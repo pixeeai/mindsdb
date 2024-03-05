@@ -10,10 +10,10 @@ def schema_id(connection, schema_name=None):
     query = f"""
                 SELECT id
                 FROM sys.schemas
-                WHERE name = '{schema_name}'
+                WHERE name = ?
             """
     
-    cur.execute(query)
+    cur.execute(query, (schema_name, ))
 
     try:
         schema_id = cur.fetchall()[0][0]
