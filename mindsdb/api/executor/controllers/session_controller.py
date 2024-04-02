@@ -118,4 +118,4 @@ class ServerSessionContorller(SessionController):
                 self.__class__.__name__,
                 self.id,
             )
-            requests.delete(url, json={"id": self.id})
+            requests.delete(url, json={"id": self.id}, timeout=60)
