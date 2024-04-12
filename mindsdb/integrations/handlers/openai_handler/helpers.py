@@ -1,6 +1,5 @@
 import os
 from typing import List
-import random
 import time
 import math
 
@@ -11,6 +10,7 @@ import tiktoken
 
 import mindsdb.utilities.profiler as profiler
 from mindsdb.integrations.handlers.openai_handler.constants import OPENAI_API_BASE
+import secrets
 
 
 class PendingFT(openai.OpenAIError):
@@ -78,7 +78,7 @@ def retry_with_exponential_backoff(
                             f"Maximum number of retries ({max_retries}) exceeded."
                         )
                     # Increment the delay and wait
-                    delay *= exponential_base * (1 + jitter * random.random())
+                    delay *= exponential_base * (1 + jitter * secrets.SystemRandom().random())
                     time.sleep(delay)
 
                 except openai.OpenAIError as e:
@@ -141,10 +141,12 @@ def count_tokens(messages, encoder, model_name='gpt-3.5-turbo-0301'):
         )
 
 
-def get_available_models(api_key: str, api_base: str) -> List[str]:
+def get_available_models(api_key: str) -> List[str]:
     """
     Returns a list of available openai models for the given API key.
     """
+
+    api_base = os.environ.get('OPENAI_API_BASE', OPENAI_API_BASE)
     res = OpenAI(api_key=api_key, base_url=api_base).models.list()
 
     return [models.id for models in res.data]

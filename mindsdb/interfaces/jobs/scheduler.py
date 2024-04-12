@@ -1,6 +1,5 @@
 import datetime as dt
 import queue
-import random
 import threading
 import time
 
@@ -8,6 +7,7 @@ from mindsdb.interfaces.jobs.jobs_controller import JobsExecutor
 from mindsdb.interfaces.storage import db
 from mindsdb.utilities import log
 from mindsdb.utilities.config import Config
+import secrets
 
 logger = log.getLogger(__name__)
 
@@ -68,7 +68,7 @@ class Scheduler:
 
             # different instances should start in not the same time
 
-            time.sleep(check_interval + random.randint(1, 10))
+            time.sleep(check_interval + secrets.SystemRandom().randint(1, 10))
 
     def check_timetable(self):
         executor = JobsExecutor()
