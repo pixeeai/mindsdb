@@ -1,5 +1,4 @@
 import shopify
-import requests
 import pandas as pd
 from typing import Text, List, Dict, Any
 
@@ -12,6 +11,7 @@ from mindsdb.integrations.handlers.utilities.query_utilities import DELETEQueryP
 from mindsdb.integrations.handlers.utilities.query_utilities import UPDATEQueryParser, UPDATEQueryExecutor
 
 from mindsdb.utilities import log
+from security import safe_requests
 
 logger = log.getLogger(__name__)
 
@@ -676,7 +676,7 @@ class CustomerReviews(APITable):
             "accept": "application/json",
             "Content-Type": "application/json"
         }
-        json_response = requests.get(url, headers=headers).json()
+        json_response = safe_requests.get(url, headers=headers).json()
         return [review for review in json_response['reviews']] if 'reviews' in json_response else []
 
 class CarrierServiceTable(APITable):

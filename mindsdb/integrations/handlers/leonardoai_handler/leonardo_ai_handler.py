@@ -10,6 +10,7 @@ from mindsdb.integrations.libs.llm.utils import get_completed_prompts
 from mindsdb.utilities import log
 from mindsdb.interfaces.storage.model_fs import HandlerStorage
 from mindsdb.utilities.config import Config
+from security import safe_requests
 
 logger = log.getLogger(__name__)
 
@@ -195,7 +196,7 @@ class LeonardoAIHandler(BaseMLEngine):
         retrieve_url = f"https://cloud.leonardo.ai/api/rest/v1/generations/{generation_id}"
 
         # GET request to retrieve image URLs
-        response_retrieve = requests.get(retrieve_url, headers=get_headers)
+        response_retrieve = safe_requests.get(retrieve_url, headers=get_headers)
         retrieve_data = response_retrieve.json()
 
         # extract URLs from the response

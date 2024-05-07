@@ -1,5 +1,4 @@
 import requests
-import asyncio
 import pandas as pd
 
 from mindsdb.integrations.handlers.discord_handler.discord_tables import MessagesTable
@@ -14,6 +13,7 @@ from mindsdb.integrations.libs.response import (
     HandlerResponse as Response,
     RESPONSE_TYPE,
 )
+from security import safe_requests
 
 discord_bot = None
 logger = log.getLogger(__name__)
@@ -56,8 +56,7 @@ class DiscordHandler(APIHandler):
             return StatusResponse(True)
 
         url = f'https://discord.com/api/v10/applications/@me'
-        result = requests.get(
-            url,
+        result = safe_requests.get(url,
             headers={
                 'Authorization': f'Bot {self.connection_data["token"]}',
                 'Content-Type': 'application/json',
@@ -141,8 +140,7 @@ class DiscordHandler(APIHandler):
             url = (
                 f'https://discord.com/api/v10/channels/{params["channel_id"]}/messages'
             )
-            result = requests.get(
-                url,
+            result = safe_requests.get(url,
                 headers={
                     'Authorization': f'Bot {self.connection_data["token"]}',
                     'Content-Type': 'application/json',

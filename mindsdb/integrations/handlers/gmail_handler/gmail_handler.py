@@ -2,8 +2,6 @@ import json
 from shutil import copyfile
 from collections import OrderedDict
 
-import requests
-
 from mindsdb.integrations.libs.response import (
     HandlerStatusResponse as StatusResponse,
     HandlerResponse as Response
@@ -25,7 +23,6 @@ import pandas as pd
 
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
-from google_auth_oauthlib.flow import Flow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from email.message import EmailMessage
@@ -33,6 +30,7 @@ from email.message import EmailMessage
 from base64 import urlsafe_b64encode, urlsafe_b64decode
 
 from .utils import AuthException, google_auth_flow, save_creds_to_file
+from security import safe_requests
 
 DEFAULT_SCOPES = ['https://www.googleapis.com/auth/gmail.compose',
                   'https://www.googleapis.com/auth/gmail.readonly',
@@ -316,7 +314,7 @@ class GmailHandler(APIHandler):
     def _download_secret_file(self, secret_file):
         # Giving more priority to the S3 file
         if self.credentials_url:
-            response = requests.get(self.credentials_url)
+            response = safe_requests.get(self.credentials_url)
             if response.status_code == 200:
                 with open(secret_file, 'w') as creds:
                     creds.write(response.text)

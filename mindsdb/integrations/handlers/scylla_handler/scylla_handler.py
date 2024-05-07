@@ -1,9 +1,7 @@
-import os
 import tempfile
 from collections import OrderedDict
 
 import pandas as pd
-import requests
 
 from cassandra.cluster import Cluster
 from cassandra.auth import PlainTextAuthProvider
@@ -22,6 +20,7 @@ from mindsdb.integrations.libs.response import (
     RESPONSE_TYPE
 )
 from mindsdb.utilities import log
+from security import safe_requests
 
 logger = log.getLogger(__name__)
 
@@ -51,7 +50,7 @@ class ScyllaHandler(DatabaseHandler):
         - Find a way to periodically clean up or delete the temporary files 
         after they have been used to prevent filling up storage over time.
         """
-        response = requests.get(url, stream=True, timeout=10)
+        response = safe_requests.get(url, stream=True, timeout=10)
         response.raise_for_status()
 
         content_length = int(response.headers.get('content-length', 0))

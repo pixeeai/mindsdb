@@ -1,6 +1,7 @@
 import json
 import requests
 from typing import Dict, List
+from security import safe_requests
 
 
 class FrappeClient(object):
@@ -31,8 +32,7 @@ class FrappeClient(object):
             doctype (str): The document type to retrieve.
             name (str): Name of the document.
         """
-        document_response = requests.get(
-            f'{self.base_url}/resource/{doctype}/{name}',
+        document_response = safe_requests.get(f'{self.base_url}/resource/{doctype}/{name}',
             headers=self.headers)
         if not document_response.ok:
             document_response.raise_for_status()
@@ -56,8 +56,7 @@ class FrappeClient(object):
             params['filters'] = json.dumps(filters)
         if fields is not None:
             params['fields'] = json.dumps(fields)
-        documents_response = requests.get(
-            f'{self.base_url}/resource/{doctype}/',
+        documents_response = safe_requests.get(f'{self.base_url}/resource/{doctype}/',
             params=params,
             headers=self.headers,
             allow_redirects=False)
@@ -67,8 +66,7 @@ class FrappeClient(object):
             redirect_url = documents_response.headers.get('location', None)
             if redirect_url is None:
                 raise requests.HTTPError('Could not find redirect URL')
-            documents_response = requests.get(
-                redirect_url,
+            documents_response = safe_requests.get(redirect_url,
                 params=params,
                 headers=self.headers,
                 allow_redirects=False)
@@ -105,7 +103,6 @@ class FrappeClient(object):
         """
 
         # No ping or similar endpoint exists, so we'll try getting the logged in user.
-        user_response = requests.get(
-            f'{self.base_url}/method/frappe.auth.get_logged_user',
+        user_response = safe_requests.get(f'{self.base_url}/method/frappe.auth.get_logged_user',
             headers=self.headers)
         return user_response.ok
