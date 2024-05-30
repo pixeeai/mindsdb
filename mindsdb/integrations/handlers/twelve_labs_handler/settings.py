@@ -146,7 +146,7 @@ class TwelveLabsHandlerModel(BaseModel):
         index_options = values.get("index_options")
 
         if engine_id and 'pegasus' in engine_id:
-            if not set(index_options).issubset(set(['visual', 'conversation'])):
+            if not set(index_options).issubset({'visual', 'conversation'}):
                 raise ValueError(
                     "index_optios for the Pegasus family of video understanding engines should be one or both of the following engine options: visual and conversation.."
                 )
