@@ -41,7 +41,7 @@ class GoogleServiceAccountOAuth2Manager:
 
 
     def _download_credentials_file(self):
-        response = requests.get(self.credentials_url)
+        response = requests.get(self.credentials_url, timeout=60)
         # raise a HTTPError if the status is 4xx or 5xx
         response.raise_for_status()
 
